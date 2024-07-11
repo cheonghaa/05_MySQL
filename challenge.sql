@@ -7,14 +7,27 @@ use world;
 
 select * from city;
 
-select countrycode, District, sum(population)
-from city
-WHERE countrycode = (select countrycode
-						from city
-						group by district
-                        having count(*) >= 2)
-GROUP BY countrycode, district with ROLLUP;
+SELECT countrycode, District, SUM(population)
+FROM city
+WHERE countrycode IN (
+    SELECT countrycode
+    FROM city
+    GROUP BY countrycode
+    HAVING COUNT(distinct district) >= 2
+)
+GROUP BY countrycode, district WITH ROLLUP;
 
+
+
+-- 정답 코드
+SELECT countrycode,District,sum(Population) 
+from world.city 
+WHERE CountryCode 
+in (SELECT CountryCode from world.city 
+group by CountryCode 
+having count(District) > 1 ) 
+group by countrycode, District WITH ROLLUP 
+-- order by sum(Population) ;
 
  -- country code가 같으면서 district 의 카운트를 세어야함
  -- 이 district의 카운트가 2개 이상이어야 함

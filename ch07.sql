@@ -1,3 +1,5 @@
+
+
 SELECT * FROM employees.employees;
 
 USE employees;
@@ -25,6 +27,8 @@ from film f
 order by f.title;
 
 -- Q7 실습
+-- LV.1
+ 
 -- 1. sqldb 데이터베이스에서 다음 조건을 처리하세요
 -- 사용자 별로 구매 이력을 출력함
 -- 모든 컬럼을 출력
@@ -58,3 +62,48 @@ SELECT name
 	FROM usertbl
     WHERE name In (SELECT name FROM usertbl WHERE mobile1 IS NULL);
     
+    
+-- LV.2
+USE SQLDB;
+
+-- CREATE table stdtbl;
+-- create table clubtbl;
+-- create table stdclubtbl;
+
+-- CREATE TABLE stdtbl (
+-- 	stdName VARCHAR(10) NOT NULL PRIMARY KEY,
+--     addr CHAR(4) NOT NULL
+-- );
+
+-- CREATE TABLE clubtbl (
+-- 	clubName VARCHAR(10) NOT NULL PRIMARY KEY,
+--     roomNo Char(4) NOT NULL
+--     );
+--     
+-- CREATE TABLE stdclubtbl(
+-- 	num int auto_increment not null primary key,
+--     stdName varchar(10) not null,
+--     clubName varchar(10) not null,
+--     FOREIGN KEY(stdName) references stdbl(stdName),
+--     FOREIGN KEY(clubName) references clubtbl(clubName)
+-- );
+
+INSERT INTO stdtbl VALUES ('김범수','경남'), ('성시경','서울'), ('조용필','경기'), ('은지원','경북'),('바비킴','서울');
+INSERT INTO clubtbl VALUES ('수영','101호'), ('바둑','102호'), ('축구','103호'), ('봉사','104호');
+INSERT INTO stdclubtbl VALUES (NULL, '김범수','바둑'), (NULL,'김범수','축구'), (NULL,'조용필','축구'), (NULL,'은지원','축구'), (NULL,'은지원','봉사'), (NULL,'바비킴','봉사');
+
+SELECT S.stdName, S.addr, SC.clubName, C.roomNo
+   FROM stdtbl S 
+      INNER JOIN stdclubtbl SC
+           ON S.stdName = SC.stdName
+      INNER JOIN clubtbl C
+           ON SC.clubName = C.clubName 
+   ORDER BY S.stdName;
+  
+SELECT C.clubName, C.roomNo, S.stdName, S.addr
+   FROM  stdtbl S
+      INNER JOIN stdclubtbl SC
+         ON SC.stdName = S.stdName
+      INNER JOIN clubtbl C
+          ON SC.clubName = C.clubName
+    ORDER BY C.clubName;

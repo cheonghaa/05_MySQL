@@ -6,6 +6,7 @@ import org.scoula.todo.context.Context;
 import org.scoula.todo.exception.LoginFailException;
 import org.scoula.todo.service.AccountService;
 import org.scoula.todo.service.LoginService;
+import org.scoula.todo.service.TodoService;
 
 import java.sql.SQLException;
 
@@ -15,7 +16,12 @@ public class TodoApp extends App {
 
     LoginService loginService = new LoginService();
     AccountService accountService = new AccountService();
+    TodoService todoService = new TodoService(); // 예시: TodoService 클래스의 인스턴스 생성
 
+    public static void main(final String[] args) {
+        final TodoApp app = new TodoApp();
+        app.run();
+    }
 
     @Override
     public void init() {
@@ -25,13 +31,22 @@ public class TodoApp extends App {
         anonymousMenu.add(new MenuItem("종료", this::exit));
 
         userMenu = new Menu();
+        userMenu.add(new MenuItem("목록", todoService::print));
+        userMenu.add(new MenuItem("검색", todoService::search));
+        userMenu.add(new MenuItem("상세", todoService::detail));
+        userMenu.add(new MenuItem("추가", todoService::create));
+        userMenu.add(new MenuItem("수정", todoService::update));
+        userMenu.add(new MenuItem("삭제", todoService::delete));
+
         userMenu.add(new MenuItem("로그아웃", this::logout));
         userMenu.add(new MenuItem("종료", this::exit));
 
         setMenu(anonymousMenu); // 시작은 annonymousMenu로
     }
-    public void join(){
+
+    public void join() {
     }
+
     public void login() {
         try {
             loginService.login();
@@ -42,22 +57,17 @@ public class TodoApp extends App {
             System.out.println(e.getMessage());
         }
     }
+
     public void logout() {
-        if(Input.confirm("로그아웃 할까요?")) {
+        if (Input.confirm("로그아웃 할까요?")) {
             Context.getContext().setUser(null);
             setMenu(anonymousMenu); // 메뉴 교체
         }
     }
 
-    public void exit(){
+    public void exit() {
 
         System.exit(0);
-    }
-
-
-    public static void main(final String[] args) {
-        final TodoApp app = new TodoApp();
-        app.run();
     }
 
 

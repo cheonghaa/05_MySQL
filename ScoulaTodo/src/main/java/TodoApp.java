@@ -16,9 +16,9 @@ public class TodoApp extends App {
     Menu userMenu; // 로그인한 상태의 메뉴
     Menu anonymousMenu; // 로그아웃한 상태의 메뉴
 
-    LoginService loginService = new LoginService();
-    AccountService accountService = new AccountService();
-    TodoService todoService = new TodoService(); // 예시: TodoService 클래스의 인스턴스 생성
+    LoginService loginService = Context.getBean(LoginService.class);
+    AccountService accountService = Context.getBean(AccountService.class);
+    TodoService todoService = Context.getBean(TodoService.class); // 예시: TodoService 클래스의 인스턴스 생성
 
 
     public static void main(final String[] args) {

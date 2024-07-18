@@ -3,10 +3,12 @@ import org.scoula.lib.cli.ui.Input;
 import org.scoula.lib.cli.ui.Menu;
 import org.scoula.lib.cli.ui.MenuItem;
 import org.scoula.todo.context.Context;
+import org.scoula.todo.dto.Page;
 import org.scoula.todo.exception.LoginFailException;
 import org.scoula.todo.service.AccountService;
 import org.scoula.todo.service.LoginService;
 import org.scoula.todo.service.TodoService;
+
 
 import java.sql.SQLException;
 
@@ -17,6 +19,7 @@ public class TodoApp extends App {
     LoginService loginService = new LoginService();
     AccountService accountService = new AccountService();
     TodoService todoService = new TodoService(); // 예시: TodoService 클래스의 인스턴스 생성
+
 
     public static void main(final String[] args) {
         final TodoApp app = new TodoApp();
@@ -31,7 +34,8 @@ public class TodoApp extends App {
         anonymousMenu.add(new MenuItem("종료", this::exit));
 
         userMenu = new Menu();
-        userMenu.add(new MenuItem("목록", todoService::print));
+        // userMenu.add(new MenuItem("목록", todoService::print));
+        userMenu.add(new MenuItem("목록", todoService::printPage));
         userMenu.add(new MenuItem("검색", todoService::search));
         userMenu.add(new MenuItem("상세", todoService::detail));
         userMenu.add(new MenuItem("추가", todoService::create));
@@ -66,7 +70,6 @@ public class TodoApp extends App {
     }
 
     public void exit() {
-
         System.exit(0);
     }
 

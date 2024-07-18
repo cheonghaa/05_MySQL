@@ -2,6 +2,7 @@ package org.scoula.todo.dao;
 
 import org.scoula.todo.common.JDBCUtil;
 import org.scoula.todo.domain.TodoVO;
+import org.scoula.todo.dto.PageRequest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -115,11 +116,26 @@ public class TodoDaoImpl implements TodoDao{
     @Override
     public int delete(String userId, Long id) throws SQLException {
         String sql = "delete from todo where userId = ? and id = ?";
-        try(PreparedStatement stmt = conn.prepareStatement(sql)) {              //자동 닫기를 위해 try문 사용
+        try(PreparedStatement stmt = conn.prepareStatement(sql)) {       //자동 닫기를 위해 try문 사용
             stmt.setString(1, userId);
             stmt.setLong(2, id);
             return stmt.executeUpdate();
         }
         //return 0;
     }
+
+    //List
+    @Override
+    public List<TodoVO> getPage(String userId, PageRequest request) throws SQLException {
+        String sql = "select * from todo where userId = ? limit ?, ?";  //limit가 들어갔다는 점이 차이점
+        try (PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, userId);
+            stmt.setInt(2, request.getOffset());            //getOffset을 불러서 계산한다.
+            stmt.setInt(3, request.getSize());
+            try(ResultSet rs = stmt.executeQuery()) {
+                return mapList(rs);
+            }
+        }
+    }
+
 }

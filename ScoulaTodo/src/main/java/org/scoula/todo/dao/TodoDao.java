@@ -1,6 +1,7 @@
 package org.scoula.todo.dao;
 
 import org.scoula.todo.domain.TodoVO;
+import org.scoula.todo.dto.PageRequest;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,4 +28,8 @@ public interface TodoDao {
 
     // Todo 삭제
     int delete(String userId, Long id) throws SQLException;
+
+    // 페이지네이션
+    List<TodoVO> getPage(String userId, PageRequest request) throws SQLException;
+
 }

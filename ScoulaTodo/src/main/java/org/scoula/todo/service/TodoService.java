@@ -5,6 +5,8 @@ import org.scoula.todo.context.Context;
 import org.scoula.todo.dao.TodoDao;
 import org.scoula.todo.dao.TodoDaoImpl;
 import org.scoula.todo.domain.TodoVO;
+import org.scoula.todo.dto.Page;
+import org.scoula.todo.dto.PageRequest;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.NoSuchElementException;
 
 public class TodoService {
     TodoDao dao = new TodoDaoImpl();
-    Supplier<String> userId = ()->Context.getContext().getUser().getId(); //로그인한 사용자 람다식으로 호출해서 변수에 저장
+    Supplier<String> userId = () -> Context.getContext().getUser().getId(); //로그인한 사용자 람다식으로 호출해서 변수에 저장
 
     public void print() {
         try {
@@ -23,8 +25,7 @@ public class TodoService {
             System.out.println("총 건수: " + count);
             System.out.println("=========================================");
             for (TodoVO todo : list) {
-                System.out.printf("%03d] %s%s\n", todo.getId(), todo.getTitle(),
-                        todo.getDone() ? "(완료)" : "");
+                System.out.printf("%03d] %s%s\n", todo.getId(), todo.getTitle(), todo.getDone() ? "(완료)" : "");
             }
             System.out.println("=========================================");
         } catch (SQLException e) {
@@ -40,16 +41,16 @@ public class TodoService {
             System.out.println("총 건수: " + list.size());
             System.out.println("=========================================");
             for (TodoVO todo : list) {
-                System.out.printf("%03d] %s%s\n", todo.getId(), todo.getTitle(),
-                        todo.getDone() ? "(완료)" : "");
+                System.out.printf("%03d] %s%s\n", todo.getId(), todo.getTitle(), todo.getDone() ? "(완료)" : "");
             }
             System.out.println("=========================================");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
     public void detail() {
-        long id = (long)Input.getInt("Todo ID: ");
+        long id = (long) Input.getInt("Todo ID: ");
         try {
             TodoVO todo = dao.get(userId.get(), id).orElseThrow(NoSuchElementException::new);
             System.out.println("=========================================");
@@ -62,23 +63,20 @@ public class TodoService {
             throw new RuntimeException(e);
         }
     }
+
     public void create() {
         String title = Input.getLine("제목: ");
         String description = Input.getLine("설명: ");
-        TodoVO todo = TodoVO.builder()
-                .title(title)
-                .description(description) .userId(userId.get())
-                .done(false)
-                .build();
+        TodoVO todo = TodoVO.builder().title(title).description(description).userId(userId.get()).done(false).build();
         try {
-            dao.create
-                    (todo);
+            dao.create(todo);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
     public void update() {
-        Long id = (long)Input.getInt("수정할 Todo ID: ");
+        Long id = (long) Input.getInt("수정할 Todo ID: ");
         try {
             TodoVO todo = dao.get(userId.get(), id).orElseThrow(NoSuchElementException::new);
             System.out.println("=========================================");
@@ -104,6 +102,40 @@ public class TodoService {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    private Page getPage(int pageNum) throws SQLException {
+        int count = dao.getTotalCount(userId.get());
+        PageRequest request = PageRequest.of(pageNum, 10);
+        List<TodoVO> list = dao.getPage(userId.get(), request);
+        return Page.of(request, count, list);
+    }
+
+    private void printPageData(Page page, int pageNum) {
+        System.out.println("총 건수: " + page.getTotalCount());
+        System.out.println("=========================================");
+        for (TodoVO todo : page.getList()) {
+            System.out.printf("%03d] %s%s\n", todo.getId(), todo.getTitle(), todo.getDone() ? "(완료)" : "");
+        }
+        System.out.println("=========================================");
+        System.out.printf("페이지(%d/%d): ", pageNum, page.getTotalPage());
+        for (int i = 1; i <= page.getTotalPage(); i++) {
+            System.out.printf("%s ", i == pageNum ? "[" + i + "]" : "" + i);
+        }
+        System.out.println();
+    }
+
+    public void printPage() {
+        int pageNum = 1;
+        try {
+            do {
+                Page page = getPage(pageNum);
+                printPageData(page, pageNum);
+                pageNum = Input.getInt("페이지 번호: ");
+            } while(pageNum != -1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

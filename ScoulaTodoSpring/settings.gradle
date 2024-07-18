@@ -1,0 +1,5 @@
+rootProject.name = 'ScoulaTodoSpring'
+include ':ScoulaCli'
+project(':ScoulaCli').projectDir=new File('C:\\fullstack\\04_JAVA\\sc\\ScoulaLib\\scoulacli')
+
+

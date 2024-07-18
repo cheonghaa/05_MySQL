@@ -1,5 +1,6 @@
 package org.scoula.travel.dao;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.scoula.config.ProjectConfig;
@@ -26,6 +27,7 @@ public class TravelImageDaoTest {
     TravelDao dao;
 
     @Test
+    @Disabled
     void createTravelImages() throws IOException, SQLException {
         String dir = "C:\\travel-image";
         List<TravelImageVO> files = Files.list(Paths.get(dir))

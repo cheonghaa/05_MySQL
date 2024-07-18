@@ -1,5 +1,6 @@
 package org.scoula.todo;
 
+import org.junit.jupiter.api.Disabled;
 import org.scoula.todo.common.JDBCUtil;
 import org.scoula.todo.domain.TodoVO;
 
@@ -22,6 +23,7 @@ class TodoDaoTest {
 
     @Test
     @DisplayName("테스트 데이터를 생성한다.")
+    @Disabled
     public void testData() throws SQLException {
         for (int
              i = 0;

@@ -11,9 +11,9 @@ import java.sql.SQLException;
 @Component
 public class LoginService
 {
-
     @Autowired
     UserDao dao;
+
     //UserDao dao = new UserDaoImpl();
     public void login() throws SQLException, LoginFailException
     {

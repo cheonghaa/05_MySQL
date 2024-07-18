@@ -18,10 +18,9 @@ public class TravelImageVO {
     private String path;
     private long size;
     public static TravelImageVO of(File file) {
-        return TravelImageVO.builder() .travelNo(Long.parseLong
-                        (file.getName().substring(0,3)))
-                .fileName
-                        (file.getName())
+        return TravelImageVO.builder()
+                .travelNo(Long.parseLong(file.getName().substring(0,3)))
+                .fileName(file.getName())
                 .path(file.getPath())
                 .size(file.length())
                 .build();

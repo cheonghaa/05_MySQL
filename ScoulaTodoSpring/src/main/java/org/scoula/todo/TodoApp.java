@@ -1,14 +1,18 @@
+package org.scoula.todo;
+
+import org.scoula.config.ProjectConfig;
 import org.scoula.lib.cli.App;
 import org.scoula.lib.cli.ui.Input;
 import org.scoula.lib.cli.ui.Menu;
 import org.scoula.lib.cli.ui.MenuItem;
 import org.scoula.todo.context.Context;
-import org.scoula.todo.dto.Page;
 import org.scoula.todo.exception.LoginFailException;
 import org.scoula.todo.service.AccountService;
 import org.scoula.todo.service.LoginService;
 import org.scoula.todo.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 
@@ -33,11 +37,6 @@ public class TodoApp extends App {
     AccountService accountService;
     @Autowired
     TodoService todoService;
-
-    public static void main(final String[] args) {
-        final TodoApp app = new TodoApp();
-        app.run();
-    }
 
     @Override
     public void init() {
@@ -86,5 +85,11 @@ public class TodoApp extends App {
         System.exit(0);
     }
 
+    public static void main(final String[] args) {
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(ProjectConfig.class);
+
+        TodoApp app = ctx.getBean(TodoApp.class);
+        app.run();
+    }
 
 }

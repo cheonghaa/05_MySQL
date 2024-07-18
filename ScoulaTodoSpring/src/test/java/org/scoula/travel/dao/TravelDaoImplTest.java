@@ -2,6 +2,7 @@ package org.scoula.travel.dao;
 
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {ProjectConfig.class, ProjectConfig.class})
+@ContextConfiguration(classes = { ProjectConfig.class})
 
 @ExtendWith(SpringExtension.class)
 @Component
@@ -26,6 +27,7 @@ class TravelDaoImplTest {
     @Autowired
     TravelDao dao;
     @Test
+    @Disabled
     void create() throws IOException, SQLException {
         List<TravelVO> members = new CsvToBeanBuilder<TravelVO>(new FileReader("travel.csv", StandardCharsets.UTF_8))
                 .withType(TravelVO.class)
